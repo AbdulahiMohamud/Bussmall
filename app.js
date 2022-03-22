@@ -1,5 +1,5 @@
 'use strict';
-let votingRounds = 15;
+let votingRounds = 25;
 let storeArr = [];
 
 let imgContainer = document.getElementById('imageContainer');
