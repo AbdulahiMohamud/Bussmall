@@ -7,8 +7,8 @@ let imgOne = document.getElementById('imageOne');
 let imgTwo = document.getElementById('imageTwo');
 let imgThree = document.getElementById('imageThree');
 
-let resultBtn = document.getElementById('showResults');
-let list = document.getElementById('list');
+
+let ctx = document.getElementById('myChart').getContext('2d');
 
 function Product (item, fileExtension = 'jpg') {
   this.storeItem = item;
@@ -45,13 +45,20 @@ function getRandomIndex(){
 
 function renderImg() {
 
-  let itemRandOne = getRandomIndex();
-  let itemRandTwo = getRandomIndex();
-  let itemRandThree = getRandomIndex();
-  while (itemRandOne === itemRandTwo || itemRandThree === itemRandOne || itemRandTwo === itemRandThree) {
-    itemRandTwo = getRandomIndex();
-    itemRandThree = getRandomIndex();
-  } 
+  let ranArr = [];
+  while (ranArr.length < 6) {
+    let ranNum = getRandomIndex();
+    if (!ranArr.includes(ranNum)) {
+      ranArr.push(ranNum);
+    }
+
+  }
+  console.log(ranArr)
+
+  let itemRandOne = ranArr.shift();
+  let itemRandTwo = ranArr.shift();
+  let itemRandThree = ranArr.shift();
+  
   imgOne.src = storeArr[itemRandOne].image;
   imgOne.alt = storeArr[itemRandOne].storeItem;
   storeArr[itemRandOne].views++;
@@ -66,6 +73,68 @@ function renderImg() {
 }
 renderImg();
 
+function renderChart() {
+
+  let itemName = [];
+  let voteData = [];
+  let viewData = [];
+
+  for(let i = 0; i < storeArr.length; i++) {
+    itemName.push(storeArr[i].storeItem);
+    voteData.push(storeArr[i].click);
+    viewData.push(storeArr[i].views);
+  }
+
+  let myChartObj = {
+    type: 'bar',
+    data: {
+      labels: itemName,
+      datasets: [{
+        label: '# of Votes',
+        data: voteData,
+        backgroundColor: [
+          'red'
+        ],
+        borderColor: [
+          'red'
+        ],
+        borderWidth: 1
+      },
+      {
+        label: '# of Views',
+        data: viewData,
+        backgroundColor: [
+          'blue'
+        ],
+        borderColor: [
+          'blue'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            // This more specific font property overrides the global property
+            font: {
+              size: 20
+            }
+          }
+        }
+      }
+    }
+  };
+
+  const myChart = new Chart(ctx, myChartObj);
+}
+
+
 function handleClick(event) {
   let imgClicked = event.target.alt;
 
@@ -78,26 +147,12 @@ function handleClick(event) {
   votingRounds--;
   if(votingRounds === 0) {
     imgContainer.removeEventListener('click',handleClick);
+    renderChart();
     return;
   }
   renderImg();
 }
 
-function handleBtn (event) {
-  if(votingRounds === 0) {
-    for (let i = 0; i < storeArr.length; i++) {
 
-      let li = document.createElement('li');
-      li.innerText = `${storeArr[i].storeItem} had ${storeArr[i].click} votes, and was seen ${storeArr[i].views} times.`;
-
-      list.appendChild(li);
-
-    }
-  }
-}
 
 imgContainer.addEventListener('click',handleClick);
-resultBtn.addEventListener('click',handleBtn);
-
-
-
