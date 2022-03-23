@@ -10,6 +10,10 @@ let imgThree = document.getElementById('imageThree');
 
 let ctx = document.getElementById('myChart').getContext('2d');
 
+let getArr = localStorage.getItem('items');
+let parsedArr = JSON.parse(getArr);
+
+
 function Product (item, fileExtension = 'jpg') {
   this.storeItem = item;
   this.image = `img/${item}.${fileExtension}`;
@@ -18,25 +22,30 @@ function Product (item, fileExtension = 'jpg') {
 
   storeArr.push(this);
 }
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dog-duck');
-new Product('dragon');
-new Product('pen');
-new Product('pet-sweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep','png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('water-can');
-new Product('wine-glass');
+if(getArr){
+  storeArr = parsedArr;
+}else{
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dog-duck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('pet-sweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep','png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('water-can');
+  new Product('wine-glass');
+
+}
 
 
 function getRandomIndex(){
@@ -53,12 +62,12 @@ function renderImg() {
     }
 
   }
-  console.log(ranArr)
+
 
   let itemRandOne = ranArr.shift();
   let itemRandTwo = ranArr.shift();
   let itemRandThree = ranArr.shift();
-  
+
   imgOne.src = storeArr[itemRandOne].image;
   imgOne.alt = storeArr[itemRandOne].storeItem;
   storeArr[itemRandOne].views++;
@@ -147,7 +156,12 @@ function handleClick(event) {
   votingRounds--;
   if(votingRounds === 0) {
     imgContainer.removeEventListener('click',handleClick);
+
     renderChart();
+
+    let strArr = JSON.stringify(storeArr);
+    localStorage.setItem('items',strArr);
+
     return;
   }
   renderImg();
