@@ -1,19 +1,18 @@
 'use strict';
 let votingRounds = 25;
 let storeArr = [];
-
+// *************** DOM************
 let imgContainer = document.getElementById('imageContainer');
 let imgOne = document.getElementById('imageOne');
 let imgTwo = document.getElementById('imageTwo');
 let imgThree = document.getElementById('imageThree');
 
-
 let ctx = document.getElementById('myChart').getContext('2d');
-
+// geting data back from local storage
 let getArr = localStorage.getItem('items');
 let parsedArr = JSON.parse(getArr);
 
-
+// contructor function
 function Product (item, fileExtension = 'jpg') {
   this.storeItem = item;
   this.image = `img/${item}.${fileExtension}`;
@@ -47,11 +46,11 @@ if(getArr){
 
 }
 
-
+// helper function
 function getRandomIndex(){
   return Math.floor(Math.random()* storeArr.length);
 }
-
+//  geting random number that doesnt repeat
 let ranArr = [];
 function renderImg() {
 
@@ -67,7 +66,7 @@ function renderImg() {
   let itemRandOne = ranArr.shift();
   let itemRandTwo = ranArr.shift();
   let itemRandThree = ranArr.shift();
-
+// putting the random number in the index of the images so they dont reapet in the next sequence
   imgOne.src = storeArr[itemRandOne].image;
   imgOne.alt = storeArr[itemRandOne].storeItem;
   storeArr[itemRandOne].views++;
@@ -81,7 +80,7 @@ function renderImg() {
   storeArr[itemRandThree].views++;
 }
 renderImg();
-
+// chart function
 function renderChart() {
 
   let itemName = [];
@@ -143,7 +142,7 @@ function renderChart() {
   const myChart = new Chart(ctx, myChartObj);
 }
 
-
+//  definig what should happen when the click event happens
 function handleClick(event) {
   let imgClicked = event.target.alt;
 
@@ -168,5 +167,5 @@ function handleClick(event) {
 }
 
 
-
+// making a click event listner
 imgContainer.addEventListener('click',handleClick);
