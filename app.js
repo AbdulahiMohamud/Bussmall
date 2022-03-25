@@ -52,9 +52,9 @@ function getRandomIndex(){
   return Math.floor(Math.random()* storeArr.length);
 }
 
+let ranArr = [];
 function renderImg() {
 
-  let ranArr = [];
   while (ranArr.length < 6) {
     let ranNum = getRandomIndex();
     if (!ranArr.includes(ranNum)) {
